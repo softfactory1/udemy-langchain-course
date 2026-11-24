@@ -1,0 +1,6 @@
+# Bot-detection config, only used when `limiter: true` in settings.yml.
+# Present mainly to silence the "missing config file" warning.
+
+[botdetection.ip_limit]
+# Extra JS/CSS token check for suspicious clients (only matters with limiter on)
+link_token = false

@@ -1,0 +1,23 @@
+[project]
+name = "udemy-langchain-course"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "arize-phoenix-otel>=0.17.3",
+    "langchain>=1.5.2",
+    "langchain-community>=0.4.2",
+    "langchain-ollama>=1.1.0",
+    "langchain-tavily>=0.2.18",
+    "loguru>=0.8.0",
+    "openai>=3.58.0",
+    "openinference-instrumentation-langchain>=0.1.90",
+    "pydantic>=2.14.4",
+    "pydantic-settings>=2.16.3",
+    "pyserxng>=0.1.0",
+    "python-dotenv>=1.2.4",
+    "searxng-wrapper>=0.1.1",
+    "tavily-python>=0.8.5",
+    "langchain-openai>=1.8.5",
+]

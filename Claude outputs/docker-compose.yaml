@@ -1,0 +1,49 @@
+services:
+  searxng:
+    image: docker.io/searxng/searxng:latest
+    container_name: searxng
+    restart: unless-stopped
+    ports:
+      - "8080:8080"          # change to "127.0.0.1:8080:8080" to expose only locally
+    volumes:
+      - ./searxng:/etc/searxng:rw          # settings.yml lives here
+      - searxng-cache:/var/cache/searxng:rw
+    environment:
+      - SEARXNG_BASE_URL=http://localhost:8080/
+      - SEARXNG_SECRET=${SEARXNG_SECRET:-change-me-to-a-long-random-string}
+    depends_on:
+      - valkey
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - SETGID
+      - SETUID
+    logging:
+      driver: json-file
+      options:
+        max-size: "1m"
+        max-file: "1"
+
+  valkey:
+    image: docker.io/valkey/valkey:8-alpine
+    container_name: searxng-valkey
+    restart: unless-stopped
+    command: valkey-server --save 30 1 --loglevel warning
+    volumes:
+      - valkey-data:/data
+    cap_drop:
+      - ALL
+    cap_add:
+      - SETGID
+      - SETUID
+      - DAC_OVERRIDE
+    logging:
+      driver: json-file
+      options:
+        max-size: "1m"
+        max-file: "1"
+
+volumes:
+  searxng-cache:
+  valkey-data:

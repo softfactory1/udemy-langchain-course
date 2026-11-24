@@ -1,0 +1,24 @@
+use_default_settings:
+  engines:
+    remove:
+      - ahmia     # Tor-only engines: need a Tor proxy, fail to load otherwise
+      - torch
+
+general:
+  instance_name: "SearXNG"
+
+server:
+  # Overridden by SEARXNG_SECRET env var in docker-compose.yaml
+  secret_key: "fcb384fbab11c3408d85bb1a197042f7489206fe3bbebfdc3e529547c5889b82"
+  limiter: false          # set true if exposing publicly (uses Valkey)
+  image_proxy: true
+
+search:
+  safe_search: 0
+  autocomplete: "duckduckgo"
+  formats:
+    - html
+    - json                # enables /search?q=...&format=json for API / LLM tools
+
+valkey:
+  url: valkey://valkey:6379/0
