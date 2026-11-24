@@ -9,6 +9,9 @@ from phoenix.otel import register
 from pyserxng import LocalSearXNGClient
 from llm.ollama import OllamaManager
 
+from langchain.agents.structured_output import ProviderStrategy
+from llm.utils import supports_structured_output
+from schemas import AgentResponse
 from settings import SETTINGS
 from utils import SearXNGClient
 
@@ -71,8 +74,16 @@ def main():
     #     logger.error(f"Access Ollama failure {exc}")
     #     return
     #tools = [search]
-    tools = [TavilySearch(tavily_api_key=SETTINGS.TAVILY_API_KEY, max_results=5)]
-    agent = create_agent(model=llm, tools=tools)
+
+    #ok = supports_structured_output(manager.openai_client, SETTINGS.OLLAMA_MODEL)
+
+    tools = [TavilySearch(tavily_api_key=SETTINGS.TAVILY_API_KEY, max_results=3)]
+    agent = create_agent(
+        model=llm,
+        tools=tools,
+        #response_format=ProviderStrategy(AgentResponse),
+        response_format=AgentResponse,
+    )
     #question = "What is the capital of Japan?"
     #question = "What's the weather in Tokyo?"
     #question = "What’s the population of Tokyo? Year 2026"
@@ -84,6 +95,7 @@ def main():
         " and list their details? when using tavily_search tool, query parameter for this toll should be always present"
     )
     result = agent.invoke(input={"messages": HumanMessage(content=question)})
+    ok = 1
     #logger.info(result)
     for message in result["messages"]:
         # if not message.content:

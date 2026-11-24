@@ -1,9 +1,11 @@
 import subprocess
+import os
 import time
 
 from langchain_ollama import ChatOllama
 from langchain_ollama._utils import validate_model
 from loguru import logger
+from openai import OpenAI
 
 
 class OllamaManager:
@@ -40,3 +42,10 @@ class OllamaManager:
             time.sleep(0.5)
         proc.terminate()
         raise RuntimeError("Ollama did not start in time")
+
+    @property
+    def openai_client(self) -> OpenAI:
+        base = (self.get_chat().base_url or os.getenv("OLLAMA_HOST") or "http://localhost:11434").rstrip("/")
+        if not base.startswith("http"):
+            base = f"http://{base}"  # OLLAMA_HOST may be just "host:port"
+        return OpenAI(base_url=f"{base}/v1", api_key="ollama")  # key is required but ignored
